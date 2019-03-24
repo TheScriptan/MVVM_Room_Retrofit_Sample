@@ -20,20 +20,41 @@ public class NetworkAdapter {
     private MutableLiveData<User> userData;
     private Call<User> userCall;
 
-    public NetworkAdapter(AppExecutors appExecutors){
+    public NetworkAdapter(AppExecutors appExecutors) {
         githubService = githubService.retrofit.create(GithubService.class);
         userData = new MutableLiveData<>();
         executors = appExecutors;
     }
 
-    public static NetworkAdapter getInstance(AppExecutors appExecutors){
-        if(sInstance == null){
-            synchronized (NetworkAdapter.class){
-                if(sInstance == null){
+    public static NetworkAdapter getInstance(AppExecutors appExecutors) {
+        if (sInstance == null) {
+            synchronized (NetworkAdapter.class) {
+                if (sInstance == null) {
                     sInstance = new NetworkAdapter(appExecutors);
                 }
             }
         }
         return sInstance;
+    }
+
+    public Callback<User> fetchUserData(UserDao userDao, MutableLiveData<User> userMutableLiveData, String username) {
+        Callback<User> fetchUser = new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                executors.diskIO().execute(() -> {
+                    if (response.isSuccessful()) {
+                        User user = response.body();
+                        userDao.addUser(user);
+                        userMutableLiveData.postValue(userDao.getUserByName(username));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.v("TEST", "FAILED TO RETRIEVE API");
+            }
+        };
+        return fetchUser;
     }
 }

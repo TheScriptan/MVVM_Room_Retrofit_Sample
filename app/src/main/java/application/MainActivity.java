@@ -15,8 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.mvvm_room_retrofit_sample.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,13 +30,14 @@ public class MainActivity extends AppCompatActivity {
     @BindView (R.id.edit_username) EditText editText;
     @BindView (R.id.btn_fetch) Button button;
     @BindView (R.id.userRecyclerView) RecyclerView userRecyclerView;
+    @BindView (R.id.tempImage) ImageView tempImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        RecyclerView.Adapter adapter = new UserListAdapter();
+        RecyclerView.Adapter adapter = new UserListAdapter(this);
         userRecyclerView.setAdapter(adapter);
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener((View v) -> {
             userViewModel.setNewUser(editText.getText().toString());
         });
+
 
 
     }

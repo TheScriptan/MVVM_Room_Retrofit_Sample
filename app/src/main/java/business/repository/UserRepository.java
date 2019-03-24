@@ -45,16 +45,10 @@ public class UserRepository {
 
     public LiveData<User> getUserData(String username){
         refreshUser(username);
-        executors.diskIO().execute(() -> {
-            userMutableLiveData.postValue(userDao.getUserByName(username));
-        });
         return userMutableLiveData;
     }
 
     public LiveData<List<User>> getUsers(){
-        executors.diskIO().execute(() -> {
-
-        });
         return userDao.getUsers();
     }
 
@@ -63,25 +57,9 @@ public class UserRepository {
             boolean userExists = userDao.hasUser(username);
             Log.v("TEST", "User: " + userExists);
             if(!userExists){
-                //networkAdapter.fetchUserData(username);
-                //userDao.addUser(userNetworkData.getValue());
-                networkAdapter.githubService.fetchUserData(username).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                            executors.diskIO().execute(() ->{
-                                User user = response.body();
-                                userDao.addUser(user);
-                                Log.v("TEST", "DATA REFRESHED FROM NETWORK " + user.getBio());
-
-                            });
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-
-                    }
-                });
+                networkAdapter.githubService.fetchUserData(username).enqueue(networkAdapter.fetchUserData(userDao, userMutableLiveData, username));
+            } else {
+                userMutableLiveData.postValue(userDao.getUserByName(username));
             }
         });
     }

@@ -19,9 +19,9 @@ public class UserViewModel extends ViewModel {
     }
 
     public void init(String username){
-//        if(this.userData != null){
-//            return;
-//        }
+        if(this.userData != null){
+            return;
+        }
         userData = repository.getUserData(username);
     }
 
