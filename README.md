@@ -45,4 +45,7 @@ To get started simply clone or fork the project and open it with Android studio.
     //ButterKnife
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+
+    //Recyclerview
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 ```    
