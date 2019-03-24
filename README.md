@@ -21,3 +21,26 @@ To get started simply clone or fork the project and open it with Android studio.
 * [Glide](https://github.com/bumptech/glide) - HTTP Image fetching library
 * [ButterKnife](http://jakewharton.github.io/butterknife/) - Library that lets you bind near Views to reduce findViewById LOC.
 * [JSON->POJO](http://www.jsonschema2pojo.org/) - Great tool to generate POJO from JSON
+
+## Implementations in Gradle
+
+```
+    //Room
+    def room_version = "2.0.0"
+    implementation "androidx.room:room-runtime:$room_version"
+
+    //ViewModel & LiveData
+    def lifecycle_version = "2.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    //Retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //ButterKnife
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+```    
