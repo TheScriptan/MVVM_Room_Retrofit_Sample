@@ -14,16 +14,16 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase sInstance;
 
-    public static AppDatabase getInstance(Context context){
-        if(sInstance == null){
-            synchronized (AppDatabase.class){
-                if(sInstance == null){
-                    sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "github_db")
-                            .build();
+        public static AppDatabase getInstance(Context context){
+            if(sInstance == null){
+                synchronized (AppDatabase.class){
+                    if(sInstance == null){
+                        sInstance = Room.databaseBuilder(context.getApplicationContext(),
+                                AppDatabase.class, "github_db")
+                                .build();
+                    }
                 }
             }
-        }
-        return sInstance;
+            return sInstance;
     }
 }

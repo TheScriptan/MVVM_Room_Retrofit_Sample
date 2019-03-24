@@ -11,13 +11,15 @@ import business.repository.UserRepository;
 public class InjectorUtils {
 
     public static UserRepository provideRepository(Context context){
+        AppExecutors executors = AppExecutors.getInstance();
         AppDatabase db = AppDatabase.getInstance(context);
-        NetworkAdapter networkAdapter = NetworkAdapter.getInstance();
-        return UserRepository.getInstance(db.userDao(), networkAdapter);
+        NetworkAdapter networkAdapter = NetworkAdapter.getInstance(executors);
+        return UserRepository.getInstance(db.userDao(), networkAdapter, executors);
     }
 
-    public static NetworkAdapter provideNetworkAdapter(UserDao userDao){
-        return NetworkAdapter.getInstance();
+    public static NetworkAdapter provideNetworkAdapter(){
+        AppExecutors executors = AppExecutors.getInstance();
+        return NetworkAdapter.getInstance(executors);
     }
 
     public static UserViewModelFactory provideUserViewModelFactory(Context context){

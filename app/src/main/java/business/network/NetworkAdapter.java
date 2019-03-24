@@ -10,48 +10,30 @@ import business.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import utils.AppExecutors;
 
 public class NetworkAdapter {
 
     private static NetworkAdapter sInstance;
-    private static GithubService githubService;
+    public static GithubService githubService;
+    private static AppExecutors executors;
     private MutableLiveData<User> userData;
     private Call<User> userCall;
 
-    public NetworkAdapter(){
+    public NetworkAdapter(AppExecutors appExecutors){
         githubService = githubService.retrofit.create(GithubService.class);
         userData = new MutableLiveData<>();
+        executors = appExecutors;
     }
 
-    public static NetworkAdapter getInstance(){
+    public static NetworkAdapter getInstance(AppExecutors appExecutors){
         if(sInstance == null){
             synchronized (NetworkAdapter.class){
                 if(sInstance == null){
-                    sInstance = new NetworkAdapter();
+                    sInstance = new NetworkAdapter(appExecutors);
                 }
             }
         }
         return sInstance;
-    }
-
-    public LiveData<User> getUserData(){
-        return userData;
-    }
-
-    public LiveData<User> fetchUserData(String username){
-        boolean status;
-        userCall = githubService.fetchUserData(username);
-        userCall.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                userData.postValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d("ERROR", "Failed to GET user from API");
-            }
-        });
-        return userData;
     }
 }

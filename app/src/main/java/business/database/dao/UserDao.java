@@ -12,12 +12,15 @@ import business.model.User;
 @Dao
 public interface UserDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void addUser(User user);
 
     @Query("SELECT * FROM user_table WHERE username = :username")
-    LiveData<User> getUserByName(String username);
+    User getUserByName(String username);
 
     @Query("SELECT * FROM user_table")
     LiveData<List<User>> getUsers();
+
+    @Query("SELECT EXISTS(SELECT 1 FROM user_table WHERE username = :username)")
+    boolean hasUser(String username);
 }

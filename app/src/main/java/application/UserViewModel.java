@@ -1,5 +1,9 @@
 package application;
 
+import android.util.Log;
+
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import business.model.User;
@@ -14,9 +18,23 @@ public class UserViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public LiveData<User> getUserData(String username){
+    public void init(String username){
+//        if(this.userData != null){
+//            return;
+//        }
         userData = repository.getUserData(username);
-        return userData;
+    }
+
+    public void setNewUser(String username){
+        userData = repository.getUserData(username);
+    }
+
+    public LiveData<User> getUserData(){
+        return this.userData;
+    }
+
+    public LiveData<List<User>> getUsers() {
+        return repository.getUsers();
     }
 
 }

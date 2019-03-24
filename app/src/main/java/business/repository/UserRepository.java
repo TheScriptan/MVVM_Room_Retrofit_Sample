@@ -1,39 +1,42 @@
 package business.repository;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import business.database.dao.UserDao;
 import business.model.User;
 import business.network.NetworkAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import utils.AppExecutors;
 
 public class UserRepository {
 
     private static UserRepository sInstance;
     private final UserDao userDao;
     private final NetworkAdapter networkAdapter;
-    private LiveData<User> userNetworkData;
-    private LiveData<List<User>> userLocalData;
+    private final AppExecutors executors;
 
+    private MutableLiveData<User> userMutableLiveData;
 
-    public UserRepository(UserDao userDao, NetworkAdapter networkAdapter){
+    public UserRepository(UserDao userDao, NetworkAdapter networkAdapter, AppExecutors executors){
         this.userDao = userDao;
         this.networkAdapter = networkAdapter;
-
-        userNetworkData = networkAdapter.getUserData();
-        userLocalData = userDao.getUsers();
-        userNetworkData.observeForever(user -> {
-            new insertUser(userDao).execute(user);
-        });
+        this.executors = executors;
+        userMutableLiveData = new MutableLiveData<>();
     }
 
-    public static UserRepository getInstance(UserDao userDao, NetworkAdapter networkAdapter){
+    public static UserRepository getInstance(UserDao userDao, NetworkAdapter networkAdapter, AppExecutors executors){
         if(sInstance == null){
             synchronized (UserRepository.class){
                 if(sInstance == null){
-                    sInstance = new UserRepository(userDao, networkAdapter);
+                    sInstance = new UserRepository(userDao, networkAdapter, executors);
                 }
             }
         }
@@ -41,36 +44,45 @@ public class UserRepository {
     }
 
     public LiveData<User> getUserData(String username){
-        userNetworkData = networkAdapter.fetchUserData(username);
-        return userNetworkData;
+        refreshUser(username);
+        executors.diskIO().execute(() -> {
+            userMutableLiveData.postValue(userDao.getUserByName(username));
+        });
+        return userMutableLiveData;
     }
 
-    private static class insertUser extends AsyncTask<User, Void, Void>{
+    public LiveData<List<User>> getUsers(){
+        executors.diskIO().execute(() -> {
 
-        private UserDao dao;
-
-        public insertUser(UserDao dao){
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(User... users) {
-            dao.addUser(users[0]);
-            return null;
-        }
+        });
+        return userDao.getUsers();
     }
 
-    private static class getUserByNameAsync extends AsyncTask<String, Void, Void>{
-        private UserDao dao;
+    public void refreshUser(String username){
+        executors.diskIO().execute(() -> {
+            boolean userExists = userDao.hasUser(username);
+            Log.v("TEST", "User: " + userExists);
+            if(!userExists){
+                //networkAdapter.fetchUserData(username);
+                //userDao.addUser(userNetworkData.getValue());
+                networkAdapter.githubService.fetchUserData(username).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                            executors.diskIO().execute(() ->{
+                                User user = response.body();
+                                userDao.addUser(user);
+                                Log.v("TEST", "DATA REFRESHED FROM NETWORK " + user.getBio());
 
-        public getUserByNameAsync(UserDao dao){
-            this.dao = dao;
-        }
+                            });
 
-        @Override
-        protected Void doInBackground(String... strings) {
-            dao.getUserByName(strings[0]);
-            return null;
-        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
     }
 }
