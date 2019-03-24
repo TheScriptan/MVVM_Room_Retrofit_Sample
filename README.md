@@ -28,6 +28,7 @@ To get started simply clone or fork the project and open it with Android studio.
     //Room
     def room_version = "2.0.0"
     implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     //ViewModel & LiveData
     def lifecycle_version = "2.0.0"
@@ -35,6 +36,7 @@ To get started simply clone or fork the project and open it with Android studio.
 
     //Retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
