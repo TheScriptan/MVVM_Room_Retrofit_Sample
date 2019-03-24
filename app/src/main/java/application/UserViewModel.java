@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import business.model.User;
 import business.repository.UserRepository;
@@ -16,13 +17,7 @@ public class UserViewModel extends ViewModel {
 
     public UserViewModel(UserRepository repository){
         this.repository = repository;
-    }
-
-    public void init(String username){
-        if(this.userData != null){
-            return;
-        }
-        userData = repository.getUserData(username);
+        userData = repository.getUserData("");
     }
 
     public void setNewUser(String username){

@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         userViewModel = ViewModelProviders.of(this, userViewModelFactory).get(UserViewModel.class);
 
 
-        userViewModel.init("googlesamples");
         userViewModel.getUserData().observe(this, user -> {
             if(user != null){
                 Log.v("TEST", "Text changed");
