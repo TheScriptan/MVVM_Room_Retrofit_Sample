@@ -1,17 +1,23 @@
 package business.database.dao;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import business.model.User;
 
 @Dao
 public interface UserDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addUser(User user);
 
     @Query("SELECT * FROM user_table WHERE username = :username")
     LiveData<User> getUserByName(String username);
+
+    @Query("SELECT * FROM user_table")
+    LiveData<List<User>> getUsers();
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import application.UserViewModelFactory;
 import business.database.AppDatabase;
+import business.database.dao.UserDao;
 import business.network.NetworkAdapter;
 import business.repository.UserRepository;
 
@@ -15,7 +16,7 @@ public class InjectorUtils {
         return UserRepository.getInstance(db.userDao(), networkAdapter);
     }
 
-    public static NetworkAdapter provideNetworkAdapter(){
+    public static NetworkAdapter provideNetworkAdapter(UserDao userDao){
         return NetworkAdapter.getInstance();
     }
 
