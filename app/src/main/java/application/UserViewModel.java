@@ -31,5 +31,4 @@ public class UserViewModel extends ViewModel {
     public LiveData<List<User>> getUsers() {
         return repository.getUsers();
     }
-
 }

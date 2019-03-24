@@ -41,7 +41,7 @@ public class NetworkAdapter {
         Callback<User> fetchUser = new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                executors.diskIO().execute(() -> {
+                executors.networkIO().execute(() -> {
                     if (response.isSuccessful()) {
                         User user = response.body();
                         userDao.addUser(user);
