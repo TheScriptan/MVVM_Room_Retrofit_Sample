@@ -1,6 +1,8 @@
 package application;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.mvvm_room_retrofit_sample.R;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import business.model.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import utils.AppExecutors;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
 

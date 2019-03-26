@@ -1,4 +1,4 @@
-package application;
+package application.viewmodel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

@@ -2,9 +2,8 @@ package utils;
 
 import android.content.Context;
 
-import application.UserViewModelFactory;
+import application.viewmodel.UserViewModelFactory;
 import business.database.AppDatabase;
-import business.database.dao.UserDao;
 import business.network.NetworkAdapter;
 import business.repository.UserRepository;
 

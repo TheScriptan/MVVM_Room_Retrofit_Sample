@@ -1,18 +1,21 @@
 package application;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import application.views.RepositoryListActivity;
-import business.model.User;
+import application.fragments.ReposListFragment;
+import application.fragments.UserListFragment;
+import application.viewmodel.UserViewModel;
+import application.viewmodel.UserViewModelFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import utils.InjectorUtils;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,53 +26,37 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.mvvm_room_retrofit_sample.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private UserViewModelFactory userViewModelFactory;
-    private UserViewModel userViewModel;
+    final Fragment userListFragment = new UserListFragment();
+    final Fragment reposListFragment = new ReposListFragment();
+    final FragmentManager fm = getSupportFragmentManager();
+    Fragment active = userListFragment;
 
-    @BindView (R.id.textView) TextView textView;
-    @BindView (R.id.edit_username) EditText editText;
-    @BindView (R.id.btn_fetch) Button button;
-    @BindView (R.id.userRecyclerView) RecyclerView userRecyclerView;
-    @BindView (R.id.tempImage) ImageView tempImage;
     @BindView (R.id.toolbar) Toolbar toolbar;
+    @BindView (R.id.bottomNav) BottomNavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //Toolbar setup
         setSupportActionBar(toolbar);
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("Github Users");
 
-        RecyclerView.Adapter adapter = new UserListAdapter(this);
-        userRecyclerView.setAdapter(adapter);
-        userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        userViewModelFactory = InjectorUtils.provideUserViewModelFactory(this);
-        userViewModel = ViewModelProviders.of(this, userViewModelFactory).get(UserViewModel.class);
+        //Fragment setup
+        fm.beginTransaction().add(R.id.main_container, reposListFragment, "2").hide(reposListFragment).commit();
+        fm.beginTransaction().add(R.id.main_container, userListFragment, "1").commit();
 
 
-        userViewModel.getUserData().observe(this, user -> {
-            if(user != null){
-                Log.v("TEST", "Text changed");
-                textView.setText(user.getName());
-            }
-        });
-
-        userViewModel.getUsers().observe(this, ((UserListAdapter) adapter)::setUserList);
-
-        button.setOnClickListener((View v) -> {
-            userViewModel.setNewUser(editText.getText().toString());
-        });
-
-
-
+        //Bottom nav view setup
+        navigationView.setOnNavigationItemSelectedListener(navigationListener);
     }
 
     @Override
@@ -83,9 +70,26 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch(id){
             case R.id.action_repository:
-                Intent intent = new Intent(MainActivity.this, RepositoryListActivity.class);
-                startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationListener
+            = menuItem -> {
+                int id = menuItem.getItemId();
+                switch(id){
+                    case R.id.navigation_users:
+                        fm.beginTransaction().hide(active).show(userListFragment).commit();
+                        active = userListFragment;
+                        getSupportActionBar().setTitle("Github Users");
+                        return true;
+                    case R.id.navigation_repos:
+                        fm.beginTransaction().hide(active).show(reposListFragment).commit();
+                        active = reposListFragment;
+                        getSupportActionBar().setTitle("Github Repositories");
+                        return true;
+                }
+                return false;
+            };
 }
