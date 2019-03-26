@@ -5,7 +5,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import business.database.AppDatabase;
+import business.database.dao.RepoDao;
 import business.database.dao.UserDao;
+import business.model.Repo;
 import business.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +39,7 @@ public class NetworkAdapter {
         return sInstance;
     }
 
-    public Callback<User> fetchUserData(UserDao userDao, MutableLiveData<User> userMutableLiveData, String username) {
+    public Callback<User> fetchUserData(UserDao userDao, MutableLiveData<User> userMutableLiveData) {
         Callback<User> fetchUser = new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -45,16 +47,37 @@ public class NetworkAdapter {
                     if (response.isSuccessful()) {
                         User user = response.body();
                         userDao.addUser(user);
-                        userMutableLiveData.postValue(userDao.getUserByName(username));
+                        userMutableLiveData.postValue(user);
                     }
                 });
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.v("TEST", "FAILED TO RETRIEVE API");
+                Log.v("TEST", "FAILED TO RETRIEVE API USER");
             }
         };
         return fetchUser;
+    }
+
+    public Callback<Repo> fetchRepoData(RepoDao repoDao, MutableLiveData<Repo> repoMutableLiveData){
+        Callback<Repo> fetchRepo = new Callback<Repo>() {
+            @Override
+            public void onResponse(Call<Repo> call, Response<Repo> response) {
+                executors.networkIO().execute(() -> {
+                    if(response.isSuccessful()){
+                        Repo repo = response.body();
+                        repoDao.insertRepo(repo);
+                        repoMutableLiveData.postValue(repo);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<Repo> call, Throwable t) {
+                Log.v("TEST", "FAILED TO RETRIEVE API USER");
+            }
+        };
+        return fetchRepo;
     }
 }

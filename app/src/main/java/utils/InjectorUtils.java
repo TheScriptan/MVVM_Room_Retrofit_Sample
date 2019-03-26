@@ -13,7 +13,7 @@ public class InjectorUtils {
         AppExecutors executors = AppExecutors.getInstance();
         AppDatabase db = AppDatabase.getInstance(context);
         NetworkAdapter networkAdapter = NetworkAdapter.getInstance(executors);
-        return UserRepository.getInstance(db.userDao(), networkAdapter, executors);
+        return UserRepository.getInstance(db, networkAdapter, executors);
     }
 
     public static NetworkAdapter provideNetworkAdapter(){
