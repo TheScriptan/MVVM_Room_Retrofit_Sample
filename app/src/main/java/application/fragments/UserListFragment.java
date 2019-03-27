@@ -1,6 +1,7 @@
 package application.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -53,7 +54,6 @@ public class UserListFragment extends Fragment {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         userViewModelFactory = InjectorUtils.provideUserViewModelFactory(getActivity().getApplicationContext());
         userViewModel = ViewModelProviders.of(this, userViewModelFactory).get(UserViewModel.class);
-
 
         userViewModel.getUserData().observe(this, user -> {
             if(user != null){

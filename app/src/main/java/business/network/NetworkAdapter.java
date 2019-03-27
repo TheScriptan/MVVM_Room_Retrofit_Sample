@@ -48,6 +48,8 @@ public class NetworkAdapter {
                         User user = response.body();
                         userDao.addUser(user);
                         userMutableLiveData.postValue(user);
+                    } else {
+                        Log.v("TEST", "Error: " + response.isSuccessful());
                     }
                 });
             }

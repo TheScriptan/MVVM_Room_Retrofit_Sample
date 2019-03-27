@@ -57,6 +57,10 @@ public class UserRepository {
     }
 
     private void refreshUser(String username){
+        //Reduces additional get CALL. I know my coding sucks xd
+        if(username.equals(""))
+
+            return;
         executors.diskIO().execute(() -> {
             boolean userExists = userDao.hasUser(username);
             Log.v("TEST", "User: " + userExists);

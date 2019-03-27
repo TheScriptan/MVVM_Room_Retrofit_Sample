@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_background"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_margin="4dp">
 
     <LinearLayout
         android:id="@+id/repo_parent_items"

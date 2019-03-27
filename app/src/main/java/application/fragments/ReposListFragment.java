@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mvvm_room_retrofit_sample.R;
 
@@ -74,6 +75,8 @@ public class ReposListFragment extends Fragment {
                 String ownerName = ownerText.getText().toString();
 
                 userViewModel.setCurrentRepo(ownerName, repoName);
+            } else {
+                Toast.makeText(getContext(), "Invalid strings", Toast.LENGTH_SHORT).show();
             }
         });
 

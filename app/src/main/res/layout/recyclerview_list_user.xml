@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="8dp"
     android:background="@drawable/rounded_background"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/user_linear_layout"
+    android:layout_margin="8dp"
+    >
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_weight="0.5"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_weight="0.5" />
 
     <TextView
         android:id="@+id/text_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
         android:layout_gravity="center_vertical"
         android:layout_weight="0.5"
-        tools:text="Hello"/>
+        android:textSize="24sp"
+        tools:text="Hello" />
+
     <TextView
         android:id="@+id/text_url"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        tools:text="https://api.github.com"/>
-    
+        android:textSize="24sp"
+        tools:text="https://api.github.com" />
+
 </LinearLayout>

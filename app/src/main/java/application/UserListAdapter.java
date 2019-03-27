@@ -1,16 +1,20 @@
 package application;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mvvm_room_retrofit_sample.R;
 
 import java.util.ArrayList;
@@ -25,14 +29,25 @@ import butterknife.ButterKnife;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
 
     //ViewHolder
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         @BindView(R.id.text_username) TextView usernameText;
         @BindView(R.id.text_url) TextView urlText;
         @BindView(R.id.imageView) ImageView imageView;
+        @BindView(R.id.user_linear_layout)
+        LinearLayout mainLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            mainLayout.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(userList.get(getAdapterPosition()).getHtmlUrl()));
+            context.startActivity(intent);
+            return true;
         }
     }
 
@@ -64,6 +79,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             String image_url = userList.get(position).getAvatarUrl();
             Glide.with(holder.itemView.getContext())
                     .load(image_url)
+                    .apply(RequestOptions.circleCropTransform())
                     .into(holder.imageView);
         }
     }

@@ -1,6 +1,8 @@
 package application;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.mvvm_room_retrofit_sample.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,7 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
 
     //ViewHolder
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         @BindView(R.id.repo_list_items) LinearLayout mainLayout;
         @BindView(R.id.repo_parent_items) LinearLayout parentLayout;
         @BindView(R.id.repo_child_items) LinearLayout childLayout;
@@ -39,6 +40,7 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
             ButterKnife.bind(this, itemView);
             childLayout.setVisibility(View.GONE);
             mainLayout.setOnClickListener(this);
+            mainLayout.setOnLongClickListener(this);
         }
 
         @Override
@@ -50,6 +52,14 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
                 expanderText.setText(" - ");
                 childLayout.setVisibility(View.GONE);
             }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(repoList.get(getAdapterPosition()).getHtmlUrl()));
+            context.startActivity(intent);
+            return true;
         }
     }
 
