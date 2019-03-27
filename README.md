@@ -9,6 +9,7 @@ To get started simply clone or fork the project and open it with Android studio.
 ### Prerequisites
 
 * Android Studio 3.3+
+* Javao 8 Features
 * Knowledge about MVVM
 * Be familiar with Room and ViewModel/LiveData
 * Be familiar with Retrofit, ButterKnife, Glide
