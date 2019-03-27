@@ -5,4 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="users">Users</string>
     <string name="repos">Repositories</string>
+    <string name="enter_new_repository">Enter new repository</string>
+    <string name="enter_repo_owner">Enter repo owner</string>
+    <string name="fetch">Fetch</string>
 </resources>

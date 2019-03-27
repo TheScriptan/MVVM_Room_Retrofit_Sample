@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "repo_table")
@@ -19,10 +20,6 @@ public class Repo {
     @SerializedName("full_name")
     @Expose
     private String fullName;
-
-    /*@SerializedName("owner")
-    @Expose
-    private User user;*/
 
     @SerializedName("html_url")
     @Expose
